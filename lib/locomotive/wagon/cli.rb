@@ -25,7 +25,7 @@ module Locomotive
 
           (site_or_deploy_file ? path : nil).tap do |_path|
             if _path.nil?
-              say 'The path does not point to a Locomotive site', :red
+              say "The path #{path} does not point to a Locomotive site", :red
             end
           end
         end
@@ -364,6 +364,20 @@ module Locomotive
           if check_path!(path)
             begin
               Locomotive::Wagon.sync(env, path, options, shell)
+            rescue Exception => e
+              self.print_exception(e, options[:verbose])
+              exit(1)
+            end
+          end
+        end
+        
+        desc 'import NAME SOURCE [TARGET]', 'Import section from a source project'
+        option :resources, aliases: '-r', type: 'array', default: nil, desc: 'Only pull the resource(s) passed (pages, content_entries, translations) in argument'
+        option :verbose, aliases: '-v', type: 'boolean', default: false, desc: 'display the full error stack trace if an error occurs'
+        def import(name, source_path, target_path = '.')
+          if check_path!(source_path) && check_path!(target_path)
+            begin
+              Locomotive::Wagon.import(name, source_path, target_path, options, shell)
             rescue Exception => e
               self.print_exception(e, options[:verbose])
               exit(1)

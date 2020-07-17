@@ -97,6 +97,19 @@ module Locomotive
       require_relative 'wagon/commands/sync_command'
       Locomotive::Wagon::SyncCommand.sync(env, path, options, shell)
     end
+    
+    # Import content from another project
+    #
+    # @param [ String ] name Name of the resource to import
+    # @param [ String ] source_path The path of the site to export from
+    # @param [ String ] target_path The path of the site to import to
+    # @param [ Hash ] connection_info The information to get connected to the remote site
+    # @param [ Hash ] options The options passed to the pull process
+    #
+    def self.import(name, source_path, target_path, options = {}, shell)
+      require_relative 'wagon/commands/import_command'
+      Locomotive::Wagon::ImportCommand.import(name, source_path, target_path, options, shell)
+    end
 
     # Clone a site from a remote LocomotiveCMS engine.
     #
